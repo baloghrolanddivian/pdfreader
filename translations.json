@@ -7,7 +7,8 @@
     "LAURA/D - Üveges": { "code": "NFAU_LU", "name": "LAURA/D - Üveges" },
     "ZILLE/P - Üveges": { "code": "NFAU_ZI", "name": "ZILLE/P - Üveges" },
     "Dfoz": { "code": "NFAH_LU", "name": "Dfoz" },
-    "Platt": { "code": "NFAH_ZI", "name": "Platt" }
+    "Platt": { "code": "NFAH_ZI", "name": "Platt" },
+    "L1/P": { "code": "NFAB_ZI", "name": "L1/P" }
   },
   "colors": {
     "Matt Dusk White": { "code": "FEA", "name": "Matt Dusk White" },
@@ -26,7 +27,9 @@
     "Uni beige": { "code": "BGF", "name": "Uni Beige" },
     "Rusztikus fehér": { "code": "FER", "name": "Rusztikus fehér" },
     "Sonoma tölgy": { "code": "SOF", "name": "Sonoma tölgy" },
-    "Wotan tölgy": { "code": "WTF", "name": "Wotan tölgy" }
+    "Wotan tölgy": { "code": "WTF", "name": "Wotan tölgy" },
+    "Palo Santo Beige": { "code": "BGAS", "name": "Palo Santo Beige" },
+    "Pure White": { "code": "FEAS", "name": "Pure White" }
   },
   "standard_sizes": [
     "115x597",

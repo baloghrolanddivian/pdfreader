@@ -48,6 +48,11 @@ def is_numeric(value: str) -> bool:
         return False
 
 
+def format_currency(value: str) -> str:
+    """Return currency-style numeric text using comma decimals for Excel."""
+    return normalize_numeric(value).replace(".", ",")
+
+
 TEXT_FIXES = {
     "Magasfényû antracit": "Magasfényű antracit",
     "Magasfényû krém": "Magasfényű krém",
@@ -55,11 +60,39 @@ TEXT_FIXES = {
     "Magasfényû fehér": "Magasfényű fehér",
     "Matt ANTRAZITE": "Matt antracit",
 }
+MOJIBAKE_FIXES = {
+    "├í": "á",
+    "├ę": "é",
+    "├ş": "í",
+    "├│": "ó",
+    "├Â": "ö",
+    "┼Ĺ": "ő",
+    "├║": "ú",
+    "├╝": "ü",
+    "┼▓": "ű",
+    "├ü": "Á",
+    "├ë": "É",
+    "├Ź": "Í",
+    "├ô": "Ó",
+    "├ľ": "Ö",
+    "┼É": "Ő",
+    "├Ü": "Ú",
+    "├ť": "Ü",
+    "┼░": "Ű",
+}
+
+
+def fix_mojibake(value: str) -> str:
+    fixed = value
+    for bad, good in MOJIBAKE_FIXES.items():
+        fixed = fixed.replace(bad, good)
+    return fixed
 
 
 def normalize_text(value: str) -> str:
     """Fix common accent/whitespace issues from PDF extraction."""
-    fixed = value.replace("\u00a0", " ").replace("  ", " ").strip()
+    fixed = fix_mojibake(value)
+    fixed = fixed.replace("\u00a0", " ").replace("  ", " ").strip()
     fixed = fixed.replace("û", "ű").replace("Â", "")
     fixed = " ".join(fixed.split())
     return TEXT_FIXES.get(fixed, fixed)
@@ -140,18 +173,19 @@ def apply_translations(
 
         product_code = product_meta.get("code", termek)
         color_code = color_meta.get("code", szin)
+        model_code = product_code.split("_")[-1]
         is_standard_size = meret in standard_sizes
 
         if meret == "718x250":
             # Speciális kód: NFAH_<színkód>_<méret>
-            kod = "_".join(filter(None, ["NFAH", color_code, meret]))
+            kod = "_".join(filter(None, ["NFAH", model_code, color_code, meret]))
         elif is_standard_size:
             size_part = meret
             code_parts = [product_code, color_code, size_part]
             kod = "_".join(filter(None, code_parts))
         else:
             # Egyedi méret: NFAY_<színkód>_<méret>
-            kod = "_".join(filter(None, ["NFAY", color_code, meret]))
+            kod = "_".join(filter(None, ["NFAY", model_code, color_code, meret]))
 
         translated.append(
             {
@@ -206,6 +240,9 @@ def main() -> None:
     rows = parse_rows(text)
     translations = load_translations(args.translations)
     rows = apply_translations(rows, translations)
+    for row in rows:
+        row["egyseg_ar"] = format_currency(row["egyseg_ar"])
+        row["netto_ar"] = format_currency(row["netto_ar"])
 
     try:
         sys.stdout.reconfigure(encoding="utf-8", newline="")
