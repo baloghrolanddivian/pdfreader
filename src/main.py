@@ -175,6 +175,8 @@ def apply_translations(
         color_code = color_meta.get("code", szin)
         model_code = product_code.split("_")[-1]
         is_standard_size = meret in standard_sizes
+        if model_code == "LU" and color_meta.get("name") == "Dune Beige":
+            color_code = "KAFS"
 
         if meret == "718x250":
             # Speciális kód: NFAH_<színkód>_<méret>

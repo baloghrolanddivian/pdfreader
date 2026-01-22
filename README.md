@@ -22,3 +22,12 @@ An example using the included sample invoice:
 ```bash
 python src/main.py samples/invoice.pdf
 ```
+
+## Order comparison
+
+Compare the latest order file against the generated invoice CSV and create
+a color-coded Excel report:
+
+```bash
+python src/order_compare.py --order order/belso\ megrendeles.csv --invoice samples/invoice-output.csv --output order/compare-output.xlsx
+```
